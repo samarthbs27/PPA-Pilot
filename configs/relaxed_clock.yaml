@@ -1,0 +1,32 @@
+# Relaxed clock config — GCN at 625 MHz (1.6 ns)
+# Goal: explore PPA headroom when clock is loosened from 714 MHz baseline
+# Hypothesis: lower cell count, smaller area, lower power vs baseline
+# clk_period in user_config.tcl: 1600
+
+run_id_prefix: relaxed_clk
+design: GCN
+platform_or_pdk: ASAP7_predictive_7nm_27R
+flow_tool: Cadence_Innovus_23.12
+
+clock_period_ns: 1.6
+clock_period_ps: 1600
+
+utilization_target: 0.50
+aspect_ratio: 1.0
+core_margin_um: 5
+
+place_density_pct: ~52
+pin_strategy: west_ctrl_east_out
+macro_strategy: none
+cts_buffer_policy: BUF_INV_curated
+route_strategy: globalDetail_antenna_fix
+hold_io_false_path: true
+
+sweep_knob: clock_period_ns
+sweep_value: 1.6
+sweep_baseline: 1.4
+
+notes: >
+  Relaxed clock target. Expect more positive setup slack, potentially smaller
+  buffer insertion for CTS, slight reduction in power. Compare area and power
+  vs baseline to quantify clock-driven cell sizing.

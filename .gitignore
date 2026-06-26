@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.ipynb_checkpoints/
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+.env
+
+# ML model binaries (large — regenerate from scripts/train_qor_model.py)
+models/*.pkl
+models/*.joblib
+models/*.h5
+models/*.pt
+models/*.pth
+
+# Raw sweep run report files (can be very numerous and large)
+# Parsed results in reports/parsed/ and results/ are committed instead
+reports/raw/runs/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

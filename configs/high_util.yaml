@@ -1,0 +1,37 @@
+# High utilization config — GCN at 714 MHz, 65% utilization
+# Goal: explore congestion/DRC impact of tighter packing at same clock target
+# Hypothesis: higher DRC count, possible setup slack degradation, smaller die footprint
+# Change in user_config.tcl: no change needed; change floorPlan command utilization arg to 0.65
+
+run_id_prefix: high_util
+design: GCN
+platform_or_pdk: ASAP7_predictive_7nm_27R
+flow_tool: Cadence_Innovus_23.12
+
+clock_period_ns: 1.4
+clock_period_ps: 1400
+
+utilization_target: 0.65    # up from 0.50 baseline
+aspect_ratio: 1.0
+core_margin_um: 5
+
+place_density_pct: ~65
+pin_strategy: west_ctrl_east_out
+macro_strategy: none
+cts_buffer_policy: BUF_INV_curated
+route_strategy: globalDetail_antenna_fix
+hold_io_false_path: true
+
+sweep_knob: utilization_target
+sweep_value: 0.65
+sweep_baseline: 0.50
+
+flow_change: >
+  In innovus_flow.tcl, change the floorPlan command:
+    floorPlan -r 1.0 0.65 5 5 5 5
+  (was 0.50 in baseline)
+
+notes: >
+  Higher utilization reduces die area but increases routing congestion.
+  Expect more DRC violations and possible setup slack degradation.
+  Compare vs baseline to quantify area–congestion tradeoff.

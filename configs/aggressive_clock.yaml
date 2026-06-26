@@ -1,0 +1,33 @@
+# Aggressive clock config — GCN at 1 GHz (1.0 ns)
+# Goal: explore timing closure boundary at 1 GHz; expect setup violations
+# This is the "tighter closure" run to generate a timing failure data point
+# clk_period in user_config.tcl: 1000
+
+run_id_prefix: aggressive_clk
+design: GCN
+platform_or_pdk: ASAP7_predictive_7nm_27R
+flow_tool: Cadence_Innovus_23.12
+
+clock_period_ns: 1.0
+clock_period_ps: 1000
+
+utilization_target: 0.50
+aspect_ratio: 1.0
+core_margin_um: 5
+
+place_density_pct: ~52
+pin_strategy: west_ctrl_east_out
+macro_strategy: none
+cts_buffer_policy: BUF_INV_curated
+route_strategy: globalDetail_antenna_fix
+hold_io_false_path: true
+
+sweep_knob: clock_period_ns
+sweep_value: 1.0
+sweep_baseline: 1.4
+
+notes: >
+  Aggressive 1 GHz target. Critical path through Transformation_Block MAC
+  datapath and scratchpad accumulator is expected to fail. Run to capture
+  WNS/TNS/violating paths for ML training data. Follow with closure attempts
+  via placement density reduction, larger core, or synthesis changes.

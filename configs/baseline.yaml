@@ -1,0 +1,53 @@
+# Baseline config — GCN at 714 MHz, 50% utilization, antenna fix enabled
+# Matches optimized_02 (hold-closed final result at 714 MHz)
+# To reproduce: set clk_period 1400 in user_config.tcl; use innovus_flow.tcl as-is
+
+run_id_prefix: baseline
+design: GCN
+platform_or_pdk: ASAP7_predictive_7nm_27R
+flow_tool: Cadence_Innovus_23.12
+
+# Clock
+clock_period_ns: 1.4        # 714 MHz
+clock_period_ps: 1400       # value to set in user_config.tcl
+
+# Floorplan
+utilization_target: 0.50
+aspect_ratio: 1.0
+core_margin_um: 5
+
+# Placement
+place_density_pct: ~52      # actual density set by Innovus after floorplan
+
+# Pin assignment
+pin_strategy: west_ctrl_east_out
+# Implementation: editPin -fixOverlap 1 -unit MICRON -spread_direction clockwise
+#   -side West for ctrl inputs; -side East for data outputs
+
+# Macros
+macro_strategy: none        # no hard macros in this design
+
+# CTS
+cts_buffer_policy: BUF_INV_curated
+# Implementation: set_ccopt_property buffer_cells {BUFx4_ASAP7_75t_R BUFx8_ASAP7_75t_R BUFx12_ASAP7_75t_R}
+#   set_ccopt_property inverter_cells {INVx4_ASAP7_75t_R INVx6_ASAP7_75t_R}
+
+# Routing
+route_strategy: globalDetail_antenna_fix
+# Implementation: setNanoRouteMode -route_detail_fix_antenna true
+
+# Timing exceptions
+hold_io_false_path: true
+# Implementation: set_interactive_constraint_modes {common}
+#   set_false_path -hold -from [remove_from_collection [all_inputs] [get_port clk]]
+#   set_false_path -hold -to [all_outputs]
+
+# Expected results (from optimized_02 run)
+expected:
+  setup_wns_ns: 0.094
+  hold_wns_ns: 0.134
+  hold_violations: 0
+  cell_area_um2: 21021.794
+  total_power_mw: 3.134
+  drc_geometry: 8872
+  drc_antenna: 0
