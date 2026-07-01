@@ -1,0 +1,30 @@
+{
+  "n_rows": 25,
+  "features": [
+    "clock_period_ns",
+    "utilization_target",
+    "aspect_ratio",
+    "cong_effort_enc"
+  ],
+  "models": {
+    "timing_classifier": {
+      "accuracy": 0.92,
+      "f1": 0.9583
+    },
+    "setup_wns_regressor": {
+      "r2": -0.4353,
+      "mae": 85.08,
+      "rmse": 192.4741
+    },
+    "power_regressor": {
+      "r2": 0.9735,
+      "mae": 0.5463,
+      "rmse": 0.8028
+    },
+    "area_regressor": {
+      "r2": 0.905,
+      "mae": 1592.9542,
+      "rmse": 2467.6812
+    }
+  }
+}

@@ -1,0 +1,32 @@
+# Utilization sweep — 65% core utilization, 714 MHz fixed clock
+# Goal: moderately congested — expect WNS degradation and DRC increase
+# Synthesis: reuse GCN.1400.syn.v (no re-synthesis needed)
+# user_config.tcl: set clk_period 1400 | set util_target 0.65 | set aspect_ratio 1.0
+
+run_id_prefix: util_65
+design: GCN
+platform_or_pdk: ASAP7_predictive_7nm_27R
+flow_tool: Cadence_Innovus_23.12
+
+clock_period_ns: 1.4
+clock_period_ps: 1400
+utilization_target: 0.65
+aspect_ratio: 1.0
+core_margin_um: 5
+
+cong_effort: low
+pin_strategy: west_ctrl_east_out
+macro_strategy: none
+cts_buffer_policy: BUF_INV_curated
+route_strategy: globalDetail_antenna_fix
+hold_io_false_path: true
+
+sweep_knob: utilization_target
+sweep_value: 0.65
+sweep_baseline: 0.50
+
+notes: >
+  Moderately high utilization. Expected: actual density ~68-72%, reduced
+  WNS from increased routing parasitics, elevated DRC count vs baseline.
+  This is the key inflection point on the utilization-vs-QoR curve.
+  Important ML data point for both WNS regression and DRC prediction.

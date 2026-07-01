@@ -1,0 +1,33 @@
+# Congestion effort sweep — medium effort, 714 MHz, 50% utilization, AR=1.0
+# Innovus spreads cells proactively during global placement to reduce overflow.
+# user_config.tcl: set clk_period 1400 | set util_target 0.50 | set cong_effort "medium"
+
+run_id_prefix: cong_medium
+design: GCN
+platform_or_pdk: ASAP7_predictive_7nm_27R
+flow_tool: Cadence_Innovus_23.12
+
+clock_period_ns: 1.4
+clock_period_ps: 1400
+utilization_target: 0.50
+aspect_ratio: 1.0
+core_margin_um: 5
+
+cong_effort: medium
+pin_strategy: west_ctrl_east_out
+macro_strategy: none
+cts_buffer_policy: BUF_INV_curated
+route_strategy: globalDetail_antenna_fix
+hold_io_false_path: true
+
+sweep_knob: cong_effort
+sweep_value: medium
+sweep_baseline: low
+
+notes: >
+  Medium placement congestion effort. Same config as baseline except
+  setPlaceMode -place_global_cong_effort medium. Expected: Innovus spreads
+  cells more aggressively during global placement, trading some timing slack
+  for reduced routing overflow. DRC count may decrease vs cong_low at the
+  cost of slightly lower WNS (cells spread further from timing-optimal positions).
+  Compare drc_count, wirelength_um, and setup_wns_ns vs baseline (cong_low).

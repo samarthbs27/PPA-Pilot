@@ -1,0 +1,42 @@
+# 0.6 ns (1.67 GHz) run — hard timing/congestion limit probe
+# Goal: determine if DC/Innovus can still close timing, or if density
+#       overflow and routing congestion finally cause a real failure.
+#
+# At 0.8 ns: post-route critical path = 0.8 - 0.197 = 0.603 ns, density 87%.
+# At 0.6 ns: target is right at the current critical path boundary.
+# DC will attempt to restructure further but ASAP7 cell speed limits may
+# prevent closure. Density likely exceeds 90% → routing overflow likely.
+#
+# user_config.tcl: set clk_period 600 | set util_target 0.50 | set aspect_ratio 1.0
+
+run_id_prefix: freq_0600
+design: GCN
+platform_or_pdk: ASAP7_predictive_7nm_27R
+flow_tool: Cadence_Innovus_23.12
+
+clock_period_ns: 0.6
+clock_period_ps: 600
+
+utilization_target: 0.50
+aspect_ratio: 1.0
+core_margin_um: 5
+
+cong_effort: low
+pin_strategy: west_ctrl_east_out
+macro_strategy: none
+cts_buffer_policy: BUF_INV_curated
+route_strategy: globalDetail_antenna_fix
+hold_io_false_path: true
+
+sweep_knob: clock_period_ns
+sweep_value: 0.6
+sweep_baseline: 1.4
+
+notes: >
+  Hard limit probe. 0.8 ns post-route critical path was 0.603 ns — 0.6 ns
+  target leaves zero margin. Expected outcomes: (a) timing fails post-route
+  with negative WNS despite DC restructuring — first real setup violation;
+  (b) density exceeds 90% causing routing overflow and DRC explosion; or
+  (c) DC finds a way to close (extends Pareto curve). Any outcome is useful:
+  failure gives setup violation story and ML boundary data point; closure
+  extends the frequency-PPA curve further.

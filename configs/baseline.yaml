@@ -33,6 +33,7 @@ cts_buffer_policy: BUF_INV_curated
 #   set_ccopt_property inverter_cells {INVx4_ASAP7_75t_R INVx6_ASAP7_75t_R}
 
 # Routing
+cong_effort: low
 route_strategy: globalDetail_antenna_fix
 # Implementation: setNanoRouteMode -route_detail_fix_antenna true
 

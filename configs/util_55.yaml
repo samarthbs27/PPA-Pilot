@@ -1,0 +1,31 @@
+# Utilization sweep — 55% core utilization, 714 MHz fixed clock
+# Goal: slightly tighter than baseline (50%), mild congestion increase
+# Synthesis: reuse GCN.1400.syn.v (no re-synthesis needed)
+# user_config.tcl: set clk_period 1400 | set util_target 0.55 | set aspect_ratio 1.0
+
+run_id_prefix: util_55
+design: GCN
+platform_or_pdk: ASAP7_predictive_7nm_27R
+flow_tool: Cadence_Innovus_23.12
+
+clock_period_ns: 1.4
+clock_period_ps: 1400
+utilization_target: 0.55
+aspect_ratio: 1.0
+core_margin_um: 5
+
+cong_effort: low
+pin_strategy: west_ctrl_east_out
+macro_strategy: none
+cts_buffer_policy: BUF_INV_curated
+route_strategy: globalDetail_antenna_fix
+hold_io_false_path: true
+
+sweep_knob: utilization_target
+sweep_value: 0.55
+sweep_baseline: 0.50
+
+notes: >
+  Mild utilization increase from baseline 50%. Expected: actual density
+  ~57-60%, slightly higher DRC, minimal timing impact. Useful intermediate
+  point between baseline and high-utilization runs for the ML regressor.

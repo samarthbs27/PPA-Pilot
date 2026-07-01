@@ -1,0 +1,32 @@
+# Aspect ratio sweep — AR=1.2 (tall die), 714 MHz, 50% utilization
+# Tall die (H > W) stretches cells vertically — may ease horizontal routing
+# but increases CTS wirelength to reach top/bottom flip-flops.
+# user_config.tcl: set clk_period 1400 | set util_target 0.50 | set aspect_ratio 1.2
+
+run_id_prefix: ar_120
+design: GCN
+platform_or_pdk: ASAP7_predictive_7nm_27R
+flow_tool: Cadence_Innovus_23.12
+
+clock_period_ns: 1.4
+clock_period_ps: 1400
+utilization_target: 0.50
+aspect_ratio: 1.2
+core_margin_um: 5
+
+cong_effort: low
+pin_strategy: west_ctrl_east_out
+macro_strategy: none
+cts_buffer_policy: BUF_INV_curated
+route_strategy: globalDetail_antenna_fix
+hold_io_false_path: true
+
+sweep_knob: aspect_ratio
+sweep_value: 1.2
+sweep_baseline: 1.0
+
+notes: >
+  Tall die (AR=1.2, H > W). Expected: increased CTS wirelength and insertion
+  delay vs square die due to longer vertical clock routes; horizontal routing
+  congestion reduced. Compare cts_wirelength_um and cts_max_insertion_delay_ps
+  vs ar_100 to measure CTS sensitivity to die shape.

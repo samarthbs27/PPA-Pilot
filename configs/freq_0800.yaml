@@ -1,0 +1,45 @@
+# 0.8 ns (1.25 GHz) run — setup violation capture
+# Goal: generate real setup timing failures on the MAC datapath for
+#       interview closure story and ML training dataset (failing run)
+#
+# Rationale: freq_1000_01 closed with WNS +0.184 ns at 1.0 ns clock.
+# Post-route critical path = 1.0 - 0.184 = 0.816 ns.
+# 0.8 ns target gives theoretical -0.016 ns WNS before congestion overhead.
+# DC re-synthesis at tighter target increases cell count beyond 18,831
+# (already at 74% density), worsening parasitics — expect WNS -0.05 to -0.15 ns.
+# 0.9 ns was ruled out as too close to boundary (likely still passes).
+#
+# clk_period in user_config.tcl: 0.8 (ns) / 800 (ps) — match prior convention
+
+run_id_prefix: freq_0800
+design: GCN
+platform_or_pdk: ASAP7_predictive_7nm_27R
+flow_tool: Cadence_Innovus_23.12
+
+clock_period_ns: 0.8
+clock_period_ps: 800
+
+utilization_target: 0.50
+aspect_ratio: 1.0
+core_margin_um: 5
+
+place_density_pct: ~52
+pin_strategy: west_ctrl_east_out
+macro_strategy: none
+cts_buffer_policy: BUF_INV_curated
+route_strategy: globalDetail_antenna_fix
+hold_io_false_path: true
+
+sweep_knob: clock_period_ns
+sweep_value: 0.8
+sweep_baseline: 1.4
+
+notes: >
+  0.8 ns (1.25 GHz) target to create a real setup violation. Critical path
+  at 1 GHz was 0.816 ns post-route — 0.8 ns forces it negative. Run Step 1
+  as baseline (no ECO): capture WNS/TNS/violating paths and identify top
+  critical path (expected: FAx1/MAJ adder tree in Transformation_Block MAC
+  datapath). Step 2 closure attempts: (1) reduce placement density to ease
+  routing congestion and parasitics, (2) Innovus optDesign -drv -hold -setup,
+  (3) manual cell upsizing on top critical path cells if needed.
+  Document before/after as the setup violation interview story.
